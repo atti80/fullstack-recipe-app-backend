@@ -13,6 +13,19 @@ app.get("/api/health", (req, res) => {
     res.status(200).json({ success: true })
 });
 
+app.get("/api/favorites/:userId", async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const userFavorites = await db.select().from(favoritesTable).where(eq(favoritesTable.userId, userId));
+
+        res.json(userFavorites);
+    } catch (error) {
+        console.error("Error listing favorites!", error);
+        res.status(500).json({ error: "Something went wrong." });
+    }
+});
+
 app.post("/api/favorites", async (req, res) => {
     try {
         console.log(req.body);
